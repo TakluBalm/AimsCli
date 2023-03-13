@@ -1,0 +1,185 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Curriculum</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.dataObjects</a>
+</div>
+
+<h1>Coverage Summary for Class: Curriculum (aimscli.dataObjects)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Curriculum</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97.6%
+  </span>
+  <span class="absValue">
+    (41/42)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.dataObjects;
+&nbsp;
+&nbsp;import java.sql.ResultSet;
+&nbsp;
+<b class="fc">&nbsp;public class Curriculum implements DataObject{</b>
+&nbsp;
+&nbsp;	public String batch, programme;
+&nbsp;	public Integer pc, pe, cp;
+&nbsp;
+&nbsp;	private int getCnt(){
+<b class="fc">&nbsp;		int cnt = 0;</b>
+<b class="fc">&nbsp;		if(batch != null)	cnt++;</b>
+<b class="fc">&nbsp;		if(programme != null)	cnt++;</b>
+<b class="fc">&nbsp;		if(pc != null)		cnt++;</b>
+<b class="fc">&nbsp;		if(pe != null)		cnt++;</b>
+<b class="fc">&nbsp;		if(cp != null)		cnt++;</b>
+<b class="fc">&nbsp;		return cnt;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String[] getAttr() {
+<b class="fc">&nbsp;		int cnt = getCnt();</b>
+<b class="fc">&nbsp;		if(cnt == 0)	return null;</b>
+<b class="fc">&nbsp;		String[] attr = new String[cnt];</b>
+&nbsp;
+<b class="fc">&nbsp;		int k = 0;</b>
+<b class="fc">&nbsp;		if(batch != null)		attr[k++] = &quot;batch&quot;;</b>
+<b class="fc">&nbsp;		if(programme != null)	attr[k++] = &quot;programme&quot;;</b>
+<b class="fc">&nbsp;		if(pc != null)			attr[k++] = &quot;pc&quot;;</b>
+<b class="fc">&nbsp;		if(pe != null)			attr[k++] = &quot;pe&quot;;</b>
+<b class="fc">&nbsp;		if(cp != null)			attr[k++] = &quot;cp&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;		return attr;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String[] getVals() {
+<b class="fc">&nbsp;		int cnt = getCnt();</b>
+<b class="fc">&nbsp;		if(cnt == 0)	return null;</b>
+<b class="fc">&nbsp;		String[] attr = new String[cnt];</b>
+&nbsp;
+<b class="fc">&nbsp;		int k = 0;</b>
+<b class="fc">&nbsp;		if(batch != null)		attr[k++] = &quot;&#39;&quot; + batch +&quot;&#39;&quot;;</b>
+<b class="fc">&nbsp;		if(programme != null)	attr[k++] = &quot;&#39;&quot;+programme+&quot;&#39;&quot;;</b>
+<b class="fc">&nbsp;		if(pc != null)			attr[k++] = &quot;&quot;+pc;</b>
+<b class="fc">&nbsp;		if(pe != null)			attr[k++] = &quot;&quot;+pe;</b>
+<b class="fc">&nbsp;		if(cp != null)			attr[k++] = &quot;&quot;+cp;</b>
+&nbsp;
+<b class="fc">&nbsp;		return attr;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String[] primaryVals() {
+<b class="fc">&nbsp;		if(batch == null || programme == null)	return null;</b>
+&nbsp;
+<b class="fc">&nbsp;		String pattr[] = new String[2];</b>
+<b class="fc">&nbsp;		pattr[0] = String.format(&quot;batch=&#39;%s&#39;&quot;, batch);</b>
+<b class="fc">&nbsp;		pattr[1] = String.format(&quot;programme=&#39;%s&#39;&quot;, programme);</b>
+&nbsp;
+<b class="fc">&nbsp;		return pattr;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Curriculum parse(ResultSet res) throws Exception {
+<b class="fc">&nbsp;		Curriculum c = new Curriculum();</b>
+&nbsp;
+<b class="fc">&nbsp;		c.batch = res.getString(&quot;batch&quot;);</b>
+<b class="fc">&nbsp;		c.programme = res.getString(&quot;programme&quot;);</b>
+<b class="fc">&nbsp;		c.pc = res.getInt(&quot;pc&quot;);</b>
+<b class="fc">&nbsp;		c.pe = res.getInt(&quot;pe&quot;);</b>
+<b class="fc">&nbsp;		c.cp = res.getInt(&quot;cp&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;		return c;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isValid() {
+<b class="fc">&nbsp;		if(batch != null &amp;&amp; programme != null &amp;&amp; pc != null &amp;&amp; pe != null &amp;&amp; cp != null)	return true;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;	
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

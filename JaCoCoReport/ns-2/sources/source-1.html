@@ -1,0 +1,185 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Login</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.commands</a>
+</div>
+
+<h1>Coverage Summary for Class: Login (aimscli.commands)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Login</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40%
+  </span>
+  <span class="absValue">
+    (2/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    17.9%
+  </span>
+  <span class="absValue">
+    (5/28)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.commands;
+&nbsp;
+&nbsp;import aimscli.commands.Base.Cmd;
+&nbsp;import aimscli.commands.Curriculum.CurriculumCmd;
+&nbsp;import aimscli.commands.Fetch.Fetch;
+&nbsp;import aimscli.commands.New.New;
+&nbsp;import aimscli.commands.Update.Update;
+&nbsp;import aimscli.pgManager.pgManager;
+&nbsp;import aimscli.pgManager.pgManager.User;
+&nbsp;import aimscli.viewManager.ansi;
+&nbsp;import aimscli.viewManager.commandPrompt;
+&nbsp;import picocli.CommandLine.Command;
+&nbsp;import picocli.CommandLine.Option;
+&nbsp;
+&nbsp;import java.io.Console;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.PrintStream;
+&nbsp;
+&nbsp;
+&nbsp;@Command(name=&quot;app&quot;, mixinStandardHelpOptions = true)
+&nbsp;public class Login extends Cmd {
+&nbsp;
+&nbsp;	public Login(User u) {
+<b class="fc">&nbsp;		super(u);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;	public static Console cons = System.console();</b>
+<b class="fc">&nbsp;	public static PrintStream out = System.out;</b>
+<b class="fc">&nbsp;	public static PrintStream err = System.out;</b>
+<b class="fc">&nbsp;	public static InputStream in = System.in;</b>
+&nbsp;	
+&nbsp;	String passwd;
+&nbsp;
+&nbsp;	@Option(names = { &quot;-u&quot;, &quot;--user&quot; })
+&nbsp;	String username;
+&nbsp;
+&nbsp;	@Option(names = {&quot;-g&quot;, &quot;--first-run&quot;})
+&nbsp;	boolean first_run;
+&nbsp;
+&nbsp;	User user;
+&nbsp;
+&nbsp;	public Login clone(){
+<b class="nc">&nbsp;		return new Login(user);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private commandPrompt initPrompt(){
+<b class="nc">&nbsp;		commandPrompt p = new commandPrompt(user);</b>
+<b class="nc">&nbsp;		p.addCommand(&quot;main&quot;, this);</b>
+<b class="nc">&nbsp;		p.addCommand(&quot;new&quot;, new New(user));</b>
+<b class="nc">&nbsp;		p.addCommand(&quot;fetch&quot;, new Fetch(user));</b>
+<b class="nc">&nbsp;		p.addCommand(&quot;update&quot;, new Update(user));</b>
+<b class="nc">&nbsp;		p.addCommand(&quot;session&quot;, new Session(user));</b>
+<b class="nc">&nbsp;		p.addCommand(&quot;curriculum&quot;, new CurriculumCmd(user));</b>
+<b class="nc">&nbsp;		p.addCommand(&quot;upload-grades&quot;, new UploadGrades(user));</b>
+<b class="nc">&nbsp;		return p;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Integer call() throws Exception{
+&nbsp;
+<b class="nc">&nbsp;		pgManager.init(first_run);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (username == null || !validUid(username)) {</b>
+<b class="nc">&nbsp;			out.printf(&quot;Username: &quot;);</b>
+<b class="nc">&nbsp;			username = cons.readLine().strip().split(&quot; &quot;)[0];</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		//	Resolve the user
+<b class="nc">&nbsp;		out.printf(&quot;Password: &quot;);</b>
+<b class="nc">&nbsp;		passwd = new String(cons.readPassword());</b>
+<b class="nc">&nbsp;		user = pgManager.authenticate(username, passwd);</b>
+<b class="nc">&nbsp;		if(user  == null){</b>
+<b class="nc">&nbsp;			Login.err.println(ansi.Err(&quot;Failed to authenticate\n&quot;));</b>
+<b class="nc">&nbsp;			return 1;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		commandPrompt p = initPrompt();</b>
+<b class="nc">&nbsp;		p.start();</b>
+<b class="nc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

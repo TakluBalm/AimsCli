@@ -1,0 +1,522 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > pgManager</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.pgManager</a>
+</div>
+
+<h1>Coverage Summary for Class: pgManager (aimscli.pgManager)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">pgManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    69.2%
+  </span>
+  <span class="absValue">
+    (9/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    67.2%
+  </span>
+  <span class="absValue">
+    (45/67)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">pgManager$Privilege</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">pgManager$User</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    68.8%
+  </span>
+  <span class="absValue">
+    (11/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    68.4%
+  </span>
+  <span class="absValue">
+    (52/76)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.pgManager;
+&nbsp;
+&nbsp;import java.sql.*;
+&nbsp;
+<b class="nc">&nbsp;public class pgManager {</b>
+&nbsp;	private static Connection c;
+&nbsp;	protected static Statement stmt;
+&nbsp;
+&nbsp;	public static void init(boolean first_run){
+&nbsp;		try {
+<b class="fc">&nbsp;			c = DriverManager.getConnection(&quot;jdbc:postgresql://localhost/test&quot;, &quot;test&quot;, &quot;test123&quot;);</b>
+<b class="fc">&nbsp;			c.setAutoCommit(false);</b>
+<b class="fc">&nbsp;			stmt = c.createStatement();</b>
+<b class="fc">&nbsp;			if(first_run){</b>
+<b class="fc">&nbsp;			stmt.execute(</b>
+&nbsp;					&quot;create table acadSession( &quot;+
+&nbsp;					&quot;id serial, &quot;+
+&nbsp;					&quot;year varchar(4), &quot;+
+&nbsp;					&quot;sem char, &quot;+
+&nbsp;					&quot;current boolean default true, &quot;+
+&nbsp;					&quot;primary key(id) &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create or replace function session_insert_trigger() &quot;+
+&nbsp;					&quot;returns trigger &quot;+
+&nbsp;					&quot;language plpgsql &quot;+
+&nbsp;					&quot;as $$ &quot;+
+&nbsp;					&quot;declare &quot;+
+&nbsp;					&quot;cnt int; &quot;+
+&nbsp;					&quot;begin &quot;+
+&nbsp;					&quot;select count(*) into cnt from acadSession where year=new.year and sem=new.sem; &quot;+
+&nbsp;					&quot;if cnt = 0 then &quot;+
+&nbsp;					&quot;return new; &quot;+
+&nbsp;					&quot;end if; &quot;+
+&nbsp;					&quot;raise exception &#39;Session already present&#39;; &quot;+
+&nbsp;					&quot;end &quot;+
+&nbsp;					&quot;$$ &quot;+
+&nbsp;					&quot;; &quot;+
+&nbsp;					&quot;create table batch( &quot;+
+&nbsp;					&quot;name varchar(4) primary key &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create table programme( &quot;+
+&nbsp;					&quot;name varchar primary key &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create table dept( &quot;+
+&nbsp;					&quot;name varchar primary key &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create table curriculum( &quot;+
+&nbsp;					&quot;batch varchar, &quot;+
+&nbsp;					&quot;programme varchar, &quot;+
+&nbsp;					&quot;pc int, &quot;+
+&nbsp;					&quot;pe int, &quot;+
+&nbsp;					&quot;cp int, &quot;+
+&nbsp;					&quot;foreign key(batch) references batch(name), &quot;+
+&nbsp;					&quot;foreign key(programme) references programme(name) &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create table auth( &quot;+
+&nbsp;					&quot;user_id varchar primary key, &quot;+
+&nbsp;					&quot;passwd varchar not null, &quot;+
+&nbsp;					&quot;role char not null, &quot;+
+&nbsp;					&quot;dept varchar, &quot;+
+&nbsp;					&quot;foreign key (dept) references dept(name) &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create or replace function auth_insert_trigger() &quot;+
+&nbsp;					&quot;returns trigger &quot;+
+&nbsp;					&quot;language plpgsql &quot;+
+&nbsp;					&quot;as $$ &quot;+
+&nbsp;					&quot;declare &quot;+
+&nbsp;					&quot;cnt int = 0; &quot;+
+&nbsp;					&quot;begin &quot;+
+&nbsp;					&quot;select count(*) from auth where user_id = new.user_id into cnt; &quot;+
+&nbsp;					&quot;if cnt = 0 then &quot;+
+&nbsp;					&quot;return new; &quot;+
+&nbsp;					&quot;else &quot;+
+&nbsp;					&quot;raise exception &#39;User with user_id &#39;&#39;%&#39;&#39; already exists&#39;, new.user_id; &quot;+
+&nbsp;					&quot;end if; &quot;+
+&nbsp;					&quot;end &quot;+
+&nbsp;					&quot;$$; &quot;+
+&nbsp;					&quot;create trigger auth_insert_trigger before insert on auth for each row execute procedure auth_insert_trigger(); &quot;+
+&nbsp;					&quot;create table  student ( &quot;+
+&nbsp;					&quot;auth_id varchar primary key, &quot;+
+&nbsp;					&quot;name varchar not null, &quot;+
+&nbsp;					&quot;surname varchar, &quot;+
+&nbsp;					&quot;batch varchar(4) not null, &quot;+
+&nbsp;					&quot;programme varchar not null, &quot;+
+&nbsp;					&quot;foreign key (auth_id) references auth(user_id), &quot;+
+&nbsp;					&quot;foreign key (batch) references batch(name), &quot;+
+&nbsp;					&quot;foreign key (programme) references programme(name) &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create or replace function student_insert_trigger() &quot;+
+&nbsp;					&quot;returns TRIGGER &quot;+
+&nbsp;					&quot;language plpgsql &quot;+
+&nbsp;					&quot;as $FUNC$ &quot;+
+&nbsp;					&quot;declare &quot;+
+&nbsp;					&quot;r char; &quot;+
+&nbsp;					&quot;begin &quot;+
+&nbsp;					&quot;select role from auth where user_id=new.auth_id into r; &quot;+
+&nbsp;					&quot;if r &lt;&gt; &#39;S&#39; then &quot;+
+&nbsp;					&quot;raise exception &#39;Not a student&#39;; &quot;+
+&nbsp;					&quot;end if; &quot;+
+&nbsp;					&quot;return new; &quot;+
+&nbsp;					&quot;end $FUNC$ &quot;+
+&nbsp;					&quot;; &quot;+
+&nbsp;					&quot;create or replace function student_afterInsert_trigger() &quot;+
+&nbsp;					&quot;returns TRIGGER &quot;+
+&nbsp;					&quot;language PLPGSQL &quot;+
+&nbsp;					&quot;as $$ &quot;+
+&nbsp;					&quot;begin &quot;+
+&nbsp;					&quot;insert into credits(student_id) values (new.auth_id); &quot;+
+&nbsp;					&quot;return null; &quot;+
+&nbsp;					&quot;end &quot;+
+&nbsp;					&quot;$$ &quot;+
+&nbsp;					&quot;; &quot;+
+&nbsp;					&quot;create trigger student_insert_trigger before insert on student for each row execute procedure student_insert_trigger(); &quot;+
+&nbsp;					&quot;create trigger student_afterInsert_trigger after insert on student for each row execute procedure student_afterInsert_trigger(); &quot;+
+&nbsp;					&quot;create table  credits( &quot;+
+&nbsp;					&quot;student_id varchar primary key, &quot;+
+&nbsp;					&quot;prev_credits int[2] default ARRAY[19, 19], &quot;+
+&nbsp;					&quot;current int default 0, &quot;+
+&nbsp;					&quot;total int default 0, &quot;+
+&nbsp;					&quot;pc int default 0, &quot;+
+&nbsp;					&quot;pe int default 0, &quot;+
+&nbsp;					&quot;cp int default 0 &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create table  faculty( &quot;+
+&nbsp;					&quot;auth_id varchar primary key, &quot;+
+&nbsp;					&quot;name varchar not null, &quot;+
+&nbsp;					&quot;surname varchar, &quot;+
+&nbsp;					&quot;foreign key (auth_id) references auth(user_id) &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create or replace function faculty_insert_trigger() &quot;+
+&nbsp;					&quot;returns TRIGGER &quot;+
+&nbsp;					&quot;language plpgsql &quot;+
+&nbsp;					&quot;as $FUNC$ &quot;+
+&nbsp;					&quot;declare &quot;+
+&nbsp;					&quot;r char; &quot;+
+&nbsp;					&quot;begin &quot;+
+&nbsp;					&quot;select role from auth where user_id=new.auth_id into r; &quot;+
+&nbsp;					&quot;if r &lt;&gt; &#39;F&#39; then &quot;+
+&nbsp;					&quot;raise exception &#39;Not a student&#39;; &quot;+
+&nbsp;					&quot;end if; &quot;+
+&nbsp;					&quot;return new; &quot;+
+&nbsp;					&quot;end $FUNC$ &quot;+
+&nbsp;					&quot;; &quot;+
+&nbsp;					&quot;create trigger faculty_insert_trigger before insert on faculty for each row execute procedure faculty_insert_trigger(); &quot;+
+&nbsp;					&quot;create table  courses( &quot;+
+&nbsp;					&quot;course_id varchar primary key, &quot;+
+&nbsp;					&quot;name varchar not null, &quot;+
+&nbsp;					&quot;description varchar, &quot;+
+&nbsp;					&quot;prereq varchar[], &quot;+
+&nbsp;					&quot;dept varchar not null, &quot;+
+&nbsp;					&quot;ltp varchar(10) not null, &quot;+
+&nbsp;					&quot;credits int not null, &quot;+
+&nbsp;					&quot;course_type varchar(2) not null, &quot;+
+&nbsp;					&quot;foreign key(dept) references dept(name) &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create or replace function courses_insert_trigger() &quot;+
+&nbsp;					&quot;returns TRIGGER &quot;+
+&nbsp;					&quot;language plpgsql &quot;+
+&nbsp;					&quot;as $$ &quot;+
+&nbsp;					&quot;declare &quot;+
+&nbsp;					&quot;pr varchar; &quot;+
+&nbsp;					&quot;cnt int; &quot;+
+&nbsp;					&quot;begin &quot;+
+&nbsp;					&quot;if new.prereq = NULL then &quot;+
+&nbsp;					&quot;return new; &quot;+
+&nbsp;					&quot;end if; &quot;+
+&nbsp;					&quot;for pr in select unnest(new.prereq) loop &quot;+
+&nbsp;					&quot;select count(*) from courses where course_id = pr into cnt; &quot;+
+&nbsp;					&quot;if cnt = 0 then &quot;+
+&nbsp;					&quot;raise exception &#39;No course corresponding to %&#39;, pr; &quot;+
+&nbsp;					&quot;return old; &quot;+
+&nbsp;					&quot;end if; &quot;+
+&nbsp;					&quot;end loop; &quot;+
+&nbsp;					&quot;return new; &quot;+
+&nbsp;					&quot;end &quot;+
+&nbsp;					&quot;$$ &quot;+
+&nbsp;					&quot;; &quot;+
+&nbsp;					&quot;create trigger courses_insert_trigger before insert on courses for each row execute procedure courses_insert_trigger(); &quot;+
+&nbsp;					&quot;create or replace function courses_update_trigger() &quot;+
+&nbsp;					&quot;returns TRIGGER &quot;+
+&nbsp;					&quot;language plpgsql &quot;+
+&nbsp;					&quot;as $$ &quot;+
+&nbsp;					&quot;declare &quot;+
+&nbsp;					&quot;pr varchar; &quot;+
+&nbsp;					&quot;cnt int; &quot;+
+&nbsp;					&quot;begin &quot;+
+&nbsp;					&quot;if new.prereq = old.prereq then &quot;+
+&nbsp;					&quot;return new; &quot;+
+&nbsp;					&quot;end if; &quot;+
+&nbsp;					&quot;for pr in select unnest(new.prereq) loop &quot;+
+&nbsp;					&quot;select count(*) from courses where course_id = pr into cnt; &quot;+
+&nbsp;					&quot;if cnt = 0 then &quot;+
+&nbsp;					&quot;raise exception &#39;No course corresponding to %&#39;, pr; &quot;+
+&nbsp;					&quot;return old; &quot;+
+&nbsp;					&quot;end if; &quot;+
+&nbsp;					&quot;end loop; &quot;+
+&nbsp;					&quot;return new; &quot;+
+&nbsp;					&quot;end &quot;+
+&nbsp;					&quot;$$ &quot;+
+&nbsp;					&quot;; &quot;+
+&nbsp;					&quot;create trigger courses_update_trigger before update on courses for each row execute procedure courses_update_trigger(); &quot;+
+&nbsp;					&quot;create table  offerings( &quot;+
+&nbsp;					&quot;course_id varchar, &quot;+
+&nbsp;					&quot;instructor_id varchar not null, &quot;+
+&nbsp;					&quot;session_id int, &quot;+
+&nbsp;					&quot;minCG real, &quot;+
+&nbsp;					&quot;completed boolean default false, &quot;+
+&nbsp;					&quot;foreign key(course_id) references courses(course_id), &quot;+
+&nbsp;					&quot;foreign key(session_id) references acadSession(id), &quot;+
+&nbsp;					&quot;foreign key(instructor_id) references faculty(auth_id), &quot;+
+&nbsp;					&quot;primary key(course_id, session_id) &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create table  enrollment( &quot;+
+&nbsp;					&quot;student_id varchar, &quot;+
+&nbsp;					&quot;course_id varchar, &quot;+
+&nbsp;					&quot;session_id int, &quot;+
+&nbsp;					&quot;grade varchar(2), &quot;+
+&nbsp;					&quot;primary key(student_id, course_id, session_id), &quot;+
+&nbsp;					&quot;foreign key(student_id) references auth(user_id), &quot;+
+&nbsp;					&quot;foreign key(course_id, session_id) references offerings(course_id, session_id) &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create table  proposal( &quot;+
+&nbsp;					&quot;course_id varchar primary key, &quot;+
+&nbsp;					&quot;name varchar not null, &quot;+
+&nbsp;					&quot;description varchar, &quot;+
+&nbsp;					&quot;prereq varchar[], &quot;+
+&nbsp;					&quot;dept varchar not null, &quot;+
+&nbsp;					&quot;ltp varchar(10) not null, &quot;+
+&nbsp;					&quot;credits int not null, &quot;+
+&nbsp;					&quot;course_type varchar(2) not null, &quot;+
+&nbsp;					&quot;foreign key(dept) references dept(name) &quot;+
+&nbsp;					&quot;); &quot;+
+&nbsp;					&quot;create trigger proposal_insert_trigger before insert on proposal for each row execute procedure courses_insert_trigger(); &quot;+
+&nbsp;					&quot;create trigger proposal_update_trigger before update on proposal for each row execute procedure courses_update_trigger(); &quot;+
+&nbsp;					&quot;insert into auth(user_id, passwd, role) values (&#39;admin&#39;, &#39;iitropar&#39;, &#39;A&#39;); &quot;
+&nbsp;			);
+<b class="fc">&nbsp;			c.commit();</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} catch (SQLException e) {</b>
+<b class="nc">&nbsp;			System.out.println(e);</b>
+<b class="nc">&nbsp;			System.exit(1);</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static class User{
+&nbsp;		public String user_id;
+&nbsp;		public final Privilege privilege;
+&nbsp;		public String dept;
+&nbsp;
+<b class="fc">&nbsp;		private User(Privilege p){</b>
+<b class="fc">&nbsp;			this.privilege = p;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		public User(){</b>
+<b class="nc">&nbsp;			this.privilege = Privilege.GST;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	public static void startSession(User u, String year, char sem) throws Exception{
+<b class="fc">&nbsp;		if(u.privilege != Privilege.ADM)	throw new Exception(&quot;Permission Denied&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;		ResultSet res = stmt.executeQuery(&quot;SELECT * FROM acadSession WHERE current=true;&quot;);</b>
+<b class="fc">&nbsp;		if(res.next()){</b>
+<b class="nc">&nbsp;			res.close();</b>
+<b class="nc">&nbsp;			throw new Exception(&quot;Cannot start another session. Close ongoing session first&quot;);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		res.close();</b>
+&nbsp;
+<b class="fc">&nbsp;		stmt.execute(String.format(&quot;INSERT INTO acadSession(year, sem) VALUES (&#39;%s&#39;, &#39;%s&#39;);&quot;, year, sem));</b>
+<b class="fc">&nbsp;		pgManager.commit();</b>
+&nbsp;	}
+&nbsp;	
+&nbsp;	public static void endSession(User u) throws Exception{
+<b class="fc">&nbsp;		if(u.privilege != Privilege.ADM)	throw new Exception(&quot;Permission Denied&quot;);</b>
+&nbsp;		
+<b class="fc">&nbsp;		ResultSet res = stmt.executeQuery(&quot;select * from enrollment where grade=null&quot;);</b>
+<b class="fc">&nbsp;		if(res.next()){</b>
+<b class="nc">&nbsp;			res.close();</b>
+<b class="nc">&nbsp;			throw new Exception(&quot;Grades have not been uploaded yet&quot;);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		res.close();</b>
+&nbsp;		
+<b class="fc">&nbsp;		stmt.execute(&quot;UPDATE credits SET prev_credits[1]=prev_credits[2], prev_credits[2]=current, current=0;&quot;);</b>
+<b class="fc">&nbsp;		stmt.execute(&quot;UPDATE acadSession SET current=false WHERE current=true&quot;);</b>
+<b class="fc">&nbsp;		pgManager.commit();</b>
+<b class="fc">&nbsp;		session_id = null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String currentYear() throws Exception{
+<b class="nc">&nbsp;		ResultSet res = stmt.executeQuery(&quot;SELECT year FROM acadSession WHERE current=true&quot;);</b>
+<b class="nc">&nbsp;		if(!res.next()){</b>
+<b class="nc">&nbsp;			throw new Exception(&quot;No session in progress&quot;);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return res.getString(1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Character currentSem() throws Exception{
+<b class="nc">&nbsp;		ResultSet res = stmt.executeQuery(&quot;SELECT sem FROM acadSession WHERE current=true&quot;);</b>
+<b class="nc">&nbsp;		if(!res.next()){</b>
+<b class="nc">&nbsp;			throw new Exception(&quot;No session in progress&quot;);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return res.getString(1).charAt(0);</b>
+&nbsp;	}
+&nbsp;
+<b class="fc">&nbsp;	static Integer session_id = null;</b>
+&nbsp;
+&nbsp;	public static Integer currentSession() throws Exception{
+<b class="fc">&nbsp;		if(session_id != null)	return session_id;</b>
+&nbsp;
+<b class="fc">&nbsp;		ResultSet res = stmt.executeQuery(&quot;SELECT id FROM acadSession WHERE current=true&quot;);</b>
+<b class="fc">&nbsp;		if(!res.next()){</b>
+<b class="nc">&nbsp;			throw new Exception(&quot;No session in progress&quot;);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		return session_id = res.getInt(1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Integer getSessionID(String year, String sem) throws Exception{
+<b class="nc">&nbsp;		ResultSet res = stmt.executeQuery(String.format(&quot;SELECT id FROM acadSession WHERE year=&#39;%s&#39; and sem=&#39;%s&#39;&quot;, year, sem));</b>
+<b class="nc">&nbsp;		if(!res.next())	return null;</b>
+<b class="nc">&nbsp;		return res.getInt(1);</b>
+&nbsp;	}
+&nbsp;
+<b class="fc">&nbsp;	public enum Privilege{</b>
+<b class="fc">&nbsp;		STU,</b>
+<b class="fc">&nbsp;		FAC,</b>
+<b class="fc">&nbsp;		ADM,</b>
+<b class="fc">&nbsp;		GST</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Statement getStmt(){
+<b class="fc">&nbsp;		return stmt;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static User authenticate(String user_id, String passwd) throws Exception{
+<b class="fc">&nbsp;		String query = String.format(</b>
+&nbsp;			&quot;SELECT role,dept FROM auth WHERE user_id = &#39;%s&#39; and passwd = &#39;%s&#39;;&quot;,
+&nbsp;			user_id,
+&nbsp;			passwd
+&nbsp;		);
+<b class="fc">&nbsp;		ResultSet res = stmt.executeQuery(query);</b>
+<b class="fc">&nbsp;		if(!res.next()){</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;		}		
+<b class="fc">&nbsp;		String dept = res.getString(2);</b>
+<b class="fc">&nbsp;		char r = res.getString(1).charAt(0);</b>
+<b class="fc">&nbsp;		res.close();</b>
+&nbsp;	
+&nbsp;		User u;
+<b class="fc">&nbsp;		switch(r){</b>
+&nbsp;			case &#39;S&#39;:
+<b class="fc">&nbsp;				u = new User(Privilege.STU);</b>
+<b class="fc">&nbsp;				break;</b>
+&nbsp;			case &#39;F&#39;:
+<b class="fc">&nbsp;				u = new User(Privilege.FAC);</b>
+<b class="fc">&nbsp;				break;</b>
+&nbsp;			case &#39;A&#39;:
+<b class="fc">&nbsp;				u = new User(Privilege.ADM);</b>
+<b class="fc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				return null;</b>
+&nbsp;		}
+<b class="fc">&nbsp;		u.user_id = user_id;</b>
+<b class="fc">&nbsp;		u.dept = dept;</b>
+<b class="fc">&nbsp;		return u;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static void commit() throws Exception{
+<b class="fc">&nbsp;		c.commit();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static void rollback() throws Exception{
+<b class="fc">&nbsp;		c.rollback();</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

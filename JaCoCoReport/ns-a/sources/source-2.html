@@ -1,0 +1,199 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > commandPrompt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.viewManager</a>
+</div>
+
+<h1>Coverage Summary for Class: commandPrompt (aimscli.viewManager)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">commandPrompt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/32)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">commandPrompt$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/33)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.viewManager;
+&nbsp;
+&nbsp;import aimscli.commands.Base.Cmd;
+&nbsp;import aimscli.commands.Login;
+&nbsp;import aimscli.pgManager.pgManager.Privilege;
+&nbsp;import aimscli.pgManager.pgManager.User;
+&nbsp;import picocli.CommandLine;
+&nbsp;
+&nbsp;import java.util.TreeMap;
+&nbsp;
+&nbsp;public class commandPrompt {
+<b class="nc">&nbsp;	String greeting = &quot;$ &quot;;</b>
+&nbsp;	User user;
+<b class="nc">&nbsp;	TreeMap&lt;String, Cmd&gt; map = new TreeMap&lt;&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;	public commandPrompt(User user2){</b>
+<b class="nc">&nbsp;		if(user2 != null){</b>
+<b class="nc">&nbsp;			user = user2;</b>
+<b class="nc">&nbsp;			greeting = String.format(&quot;%s[%s@iitrpr]:$ &quot;, user.user_id, role2prompt(user.privilege));</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private String role2prompt(Privilege r){
+<b class="nc">&nbsp;		switch(r){</b>
+&nbsp;			case STU:
+<b class="nc">&nbsp;				return &quot;Student&quot;;</b>
+&nbsp;			case FAC:
+<b class="nc">&nbsp;				return &quot;Faculty&quot;;</b>
+&nbsp;			case ADM:
+<b class="nc">&nbsp;				return &quot;Acad&quot;;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				return &quot;Guest&quot;;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private int execute(String[] args){
+<b class="nc">&nbsp;		String command = args[0];</b>
+<b class="nc">&nbsp;		if(!map.containsKey(command)){</b>
+<b class="nc">&nbsp;			Login.err.printf(&quot;Invalid Command: %s\n&quot;, command);</b>
+<b class="nc">&nbsp;			return 1;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		String[] args2 = new String[args.length-1];</b>
+<b class="nc">&nbsp;		for(int i = 0; i &lt; args2.length; i++){</b>
+<b class="nc">&nbsp;			args2[i] = args[i+1].replaceAll(&quot;\\\\&quot;, &quot;&quot;);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		CommandLine cmd = new CommandLine(map.get(command).clone());</b>
+<b class="nc">&nbsp;		return cmd.execute(args2);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void addCommand(String key, Cmd command){
+<b class="nc">&nbsp;		map.put(key, command);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public int start(){
+&nbsp;		try{
+&nbsp;			while(true){
+<b class="nc">&nbsp;				Login.out.print(greeting);</b>
+<b class="nc">&nbsp;				String in = Login.cons.readLine();</b>
+<b class="nc">&nbsp;				String[] args = in.split(&quot;(?&lt;!\\\\)\\s+&quot;);</b>
+<b class="nc">&nbsp;				if(args[0].equals(&quot;exit&quot;) || args[0].equals(&quot;quit&quot;))	break;</b>
+<b class="nc">&nbsp;				int code = execute(args);</b>
+<b class="nc">&nbsp;				Login.err.println(ansi.Italic(&quot;\n\nExit code: &quot;+ ((code == 0)?ansi.Green(code):ansi.Red(code))));</b>
+<b class="nc">&nbsp;			}</b>
+<b class="nc">&nbsp;			return 0;</b>
+<b class="nc">&nbsp;		}catch(Exception e){</b>
+<b class="nc">&nbsp;			Login.err.println(e);</b>
+<b class="nc">&nbsp;			return 0;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

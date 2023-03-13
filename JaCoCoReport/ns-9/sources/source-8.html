@@ -1,0 +1,153 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > OfferingTable</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.pgManager</a>
+</div>
+
+<h1>Coverage Summary for Class: OfferingTable (aimscli.pgManager)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OfferingTable</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    62.5%
+  </span>
+  <span class="absValue">
+    (5/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72.7%
+  </span>
+  <span class="absValue">
+    (8/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.pgManager;
+&nbsp;
+&nbsp;import aimscli.dataObjects.Offering;
+&nbsp;import aimscli.pgManager.pgManager.Privilege;
+&nbsp;import aimscli.pgManager.pgManager.User;
+&nbsp;
+&nbsp;import java.sql.ResultSet;
+&nbsp;
+&nbsp;public class OfferingTable extends Table{
+&nbsp;
+&nbsp;	public OfferingTable(){
+<b class="fc">&nbsp;		super(&quot;offerings&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean insertPrivilege(User u) {
+<b class="fc">&nbsp;		if(u.privilege != Privilege.ADM)	return false;</b>
+<b class="fc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean updatePrivilege(User u) {
+<b class="nc">&nbsp;		return insertPrivilege(u);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean queryPrivilege(User u) {
+<b class="fc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean deletePrivilege(User u) {
+<b class="nc">&nbsp;		return insertPrivilege(u);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void insert(User u, Offering d) throws Exception{
+<b class="fc">&nbsp;		super.insert(u, d);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void update(User u, Offering old, Offering updated) throws Exception{
+<b class="nc">&nbsp;		super.update(u, old, updated);</b>
+&nbsp;	}
+&nbsp;	
+&nbsp;	public ResultSet query(User u, Offering reference) throws Exception{
+<b class="fc">&nbsp;		if(u.privilege == Privilege.FAC){</b>
+<b class="fc">&nbsp;			reference.instructor_id = u.user_id;</b>
+&nbsp;		}
+<b class="fc">&nbsp;		return super.query(u, reference);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

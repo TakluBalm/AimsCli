@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ansi</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.viewManager</a>
+</div>
+
+<h1>Coverage Summary for Class: ansi (aimscli.viewManager)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ansi</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (4/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (4/12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.viewManager;
+&nbsp;
+<b class="nc">&nbsp;public class ansi {</b>
+&nbsp;	final private static String BLK = (char)27 + &quot;[30m&quot;;
+&nbsp;	final private static String RED = (char)27 + &quot;[31m&quot;;
+&nbsp;	final private static String GRN = (char)27 + &quot;[32m&quot;;
+&nbsp;	final private static String YEL = (char)27 + &quot;[33m&quot;;
+&nbsp;	final private static String BLU = (char)27 + &quot;[34m&quot;;
+&nbsp;	final private static String MGT = (char)27 + &quot;[35m&quot;;
+&nbsp;	final private static String CYN = (char)27 + &quot;[36m&quot;;
+&nbsp;	final private static String WHT = (char)27 + &quot;[37m&quot;;
+&nbsp;	final private static String RST = (char)27 + &quot;[0m&quot;;
+&nbsp;
+&nbsp;	final private static String ITL = (char)27 + &quot;[3m&quot;;
+&nbsp;	final private static String ITL_RST = (char)27 + &quot;[23m&quot;;
+&nbsp;	final private static String BLD = (char)27 + &quot;[1m&quot;;
+&nbsp;	final private static String BLD_RST = (char)27 + &quot;[22m&quot;;
+&nbsp;
+&nbsp;	public static String Black(Object txt){
+<b class="nc">&nbsp;		return BLK + txt + RST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String Red(Object txt){
+<b class="fc">&nbsp;		return RED + txt + RST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String Green(Object txt){
+<b class="nc">&nbsp;		return GRN + txt + RST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String Yellow(Object txt){
+<b class="nc">&nbsp;		return YEL + txt + RST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String Blue(Object txt){
+<b class="nc">&nbsp;		return BLU + txt + RST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String Magenta(Object txt){
+<b class="nc">&nbsp;		return MGT + txt + RST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String Cyan(Object txt){
+<b class="nc">&nbsp;		return CYN + txt + RST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String White(Object txt){
+<b class="nc">&nbsp;		return WHT + txt + RST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String Italic(Object txt){
+<b class="fc">&nbsp;		return ITL + txt + ITL_RST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String Bold(Object txt){
+<b class="fc">&nbsp;		return BLD + txt + BLD_RST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String Err(Object txt){
+<b class="fc">&nbsp;		return Bold(Italic(Red(txt)));</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

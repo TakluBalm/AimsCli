@@ -1,0 +1,155 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > newOffering</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.commands.New</a>
+</div>
+
+<h1>Coverage Summary for Class: newOffering (aimscli.commands.New)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">newOffering</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76.5%
+  </span>
+  <span class="absValue">
+    (13/17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.commands.New;
+&nbsp;
+&nbsp;import aimscli.commands.Base.SubCmd;
+&nbsp;import aimscli.commands.Login;
+&nbsp;import aimscli.dataObjects.Offering;
+&nbsp;import aimscli.pgManager.OfferingTable;
+&nbsp;import aimscli.pgManager.pgManager;
+&nbsp;import aimscli.viewManager.ansi;
+&nbsp;import picocli.CommandLine.Command;
+&nbsp;import picocli.CommandLine.Option;
+&nbsp;
+&nbsp;@Command(
+&nbsp;	name = &quot;offering&quot;,
+&nbsp;	description = &quot;Put up a course as being offered for a particular Semester&quot;,
+&nbsp;	mixinStandardHelpOptions = true
+&nbsp;)
+<b class="fc">&nbsp;public class newOffering extends SubCmd{</b>
+&nbsp;
+&nbsp;	@Option(names={&quot;-c&quot;, &quot;--course&quot;}, description = &quot;ID of the course&quot;)
+&nbsp;		String course_id;
+&nbsp;	@Option(names={&quot;-i&quot;, &quot;--instructor&quot;}, description = &quot;ID of instructor&quot;)
+&nbsp;		String instructor_id;
+&nbsp;	@Option(names={&quot;--mincg&quot;}, description = &quot;CG constraint&quot;)
+&nbsp;		Float mincg;
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Integer call() throws Exception {
+&nbsp;
+<b class="fc">&nbsp;		if(course_id == null || !validUid(course_id))	course_id = fetchLine(&quot;Course ID: &quot;, &quot;Invalid ID&quot;, this::validUid);</b>
+&nbsp;
+<b class="fc">&nbsp;		if(instructor_id == null || !validUid(instructor_id)) instructor_id = fetchLine(&quot;Instructor ID: &quot;, &quot;Invalid ID&quot;, this::validUid);</b>
+&nbsp;		
+&nbsp;		try{
+<b class="fc">&nbsp;			Offering of = new Offering();</b>
+<b class="fc">&nbsp;			of.course_id = course_id;</b>
+<b class="fc">&nbsp;			of.instructor_id = instructor_id;</b>
+<b class="fc">&nbsp;			of.minCG = mincg;</b>
+<b class="fc">&nbsp;			of.session_id = pgManager.currentSession();</b>
+&nbsp;
+<b class="fc">&nbsp;			OfferingTable ot = new OfferingTable();</b>
+<b class="fc">&nbsp;			ot.insert(user, of);</b>
+<b class="fc">&nbsp;			pgManager.commit();</b>
+<b class="nc">&nbsp;		}catch(Exception e){</b>
+<b class="nc">&nbsp;			pgManager.rollback();</b>
+<b class="nc">&nbsp;			Login.err.println(ansi.Err(e.getMessage()));</b>
+<b class="nc">&nbsp;			return 1;</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+<b class="fc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;		
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

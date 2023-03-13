@@ -1,0 +1,182 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > checkCurriculum</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.commands.Curriculum</a>
+</div>
+
+<h1>Coverage Summary for Class: checkCurriculum (aimscli.commands.Curriculum)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">checkCurriculum</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (28/35)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.commands.Curriculum;
+&nbsp;
+&nbsp;import aimscli.commands.Base.SubCmd;
+&nbsp;import aimscli.commands.Login;
+&nbsp;import aimscli.dataObjects.Credits;
+&nbsp;import aimscli.dataObjects.Curriculum;
+&nbsp;import aimscli.dataObjects.Student;
+&nbsp;import aimscli.pgManager.CreditsTable;
+&nbsp;import aimscli.pgManager.CurriculumTable;
+&nbsp;import aimscli.pgManager.StudentTable;
+&nbsp;import aimscli.pgManager.pgManager.Privilege;
+&nbsp;import aimscli.viewManager.ansi;
+&nbsp;import picocli.CommandLine.Command;
+&nbsp;import picocli.CommandLine.Option;
+&nbsp;
+&nbsp;import java.sql.ResultSet;
+&nbsp;
+&nbsp;@Command(
+&nbsp;	name = &quot;check&quot;,
+&nbsp;	description = &quot;Check if a student has completed his/her curriculum&quot;,
+&nbsp;	mixinStandardHelpOptions = true
+&nbsp;)
+<b class="fc">&nbsp;public class checkCurriculum extends SubCmd{</b>
+&nbsp;	@Option(names={&quot;-s&quot;, &quot;--student&quot;}, description = &quot;Student ID (Ignored if Student)&quot;)
+&nbsp;		String student_id;
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Integer call() throws Exception {
+&nbsp;
+<b class="fc">&nbsp;		if(user.privilege != Privilege.STU){</b>
+<b class="nc">&nbsp;			if(student_id == null || !validUid(student_id)){</b>
+<b class="nc">&nbsp;				student_id = fetchLine(&quot;Student ID&quot;, &quot;Invalid ID&quot;, this::validUid);</b>
+&nbsp;			}
+&nbsp;		}else{
+<b class="fc">&nbsp;			student_id = user.user_id;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		try{
+<b class="fc">&nbsp;			StudentTable st = new StudentTable();</b>
+<b class="fc">&nbsp;			Student s = new Student();</b>
+<b class="fc">&nbsp;			s.auth_id = student_id;</b>
+&nbsp;
+<b class="fc">&nbsp;			ResultSet res = st.query(user, s);</b>
+<b class="fc">&nbsp;			if(!res.next())	throw new Exception(&quot;No such student&quot;);</b>
+<b class="fc">&nbsp;			s = s.parse(res);</b>
+&nbsp;
+<b class="fc">&nbsp;			CurriculumTable ct = new CurriculumTable();</b>
+<b class="fc">&nbsp;			Curriculum c = new Curriculum();</b>
+<b class="fc">&nbsp;			c.batch = s.batch;</b>
+<b class="fc">&nbsp;			c.programme = s.programme;</b>
+&nbsp;
+<b class="fc">&nbsp;			res = ct.query(user, c);</b>
+<b class="fc">&nbsp;			if(!res.next())	throw new Exception(String.format(&quot;No curriculum for (%s, %s) defined&quot;, s.batch, s.programme));</b>
+<b class="fc">&nbsp;			c = c.parse(res);</b>
+&nbsp;
+<b class="fc">&nbsp;			CreditsTable crt = new CreditsTable();</b>
+<b class="fc">&nbsp;			Credits cr = new Credits();</b>
+<b class="fc">&nbsp;			cr.student_id = student_id;</b>
+&nbsp;
+<b class="fc">&nbsp;			res = crt.query(user, cr);</b>
+<b class="fc">&nbsp;			res.next();</b>
+<b class="fc">&nbsp;			cr = cr.parse(res);</b>
+&nbsp;
+<b class="fc">&nbsp;			if(cr.cp &gt;= c.cp &amp;&amp; cr.pc &gt;= c.pc &amp;&amp; cr.pe &gt;= c.pe){</b>
+<b class="nc">&nbsp;				Login.out.println(student_id + &quot;&#39;s curriculum is complete&quot;);</b>
+<b class="nc">&nbsp;				return 0;</b>
+&nbsp;			}
+<b class="fc">&nbsp;			Login.out.println(student_id + &quot;&#39;s curriculum is yet to complete. He/She needs:&quot;);</b>
+<b class="fc">&nbsp;			if(cr.cp &lt; c.cp)	Login.out.println((c.cp-cr.cp)+&quot; Capstone Credits&quot;);</b>
+<b class="fc">&nbsp;			if(cr.pc &lt; c.pc)	Login.out.println((c.pc-cr.pc)+&quot; Programme Core Credits&quot;);</b>
+<b class="fc">&nbsp;			if(cr.pe &lt; c.pe)	Login.out.println((c.pe-cr.pe)+&quot; Programme Elective Credits&quot;);</b>
+<b class="fc">&nbsp;			return 0;</b>
+<b class="nc">&nbsp;		}catch(Exception e){</b>
+<b class="nc">&nbsp;			Login.err.println(ansi.Err(e.getMessage()));</b>
+<b class="nc">&nbsp;			return 1;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;	
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

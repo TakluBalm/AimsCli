@@ -1,0 +1,198 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Credits</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.dataObjects</a>
+</div>
+
+<h1>Coverage Summary for Class: Credits (aimscli.dataObjects)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Credits</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88.7%
+  </span>
+  <span class="absValue">
+    (47/53)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.dataObjects;
+&nbsp;
+&nbsp;import java.sql.ResultSet;
+&nbsp;
+<b class="fc">&nbsp;public class Credits implements DataObject{</b>
+&nbsp;
+&nbsp;	public String student_id;
+&nbsp;	public Integer prev_credits[], current, total, pc, pe, cp;
+&nbsp;
+&nbsp;	private int getCnt(){
+<b class="fc">&nbsp;		int cnt = 0;</b>
+<b class="fc">&nbsp;		if(student_id != null)	cnt++;</b>
+<b class="fc">&nbsp;		if(prev_credits != null &amp;&amp; prev_credits.length != 0)	cnt++;</b>
+<b class="fc">&nbsp;		if(current != null)		cnt++;</b>
+<b class="fc">&nbsp;		if(total != null)		cnt++;</b>
+<b class="fc">&nbsp;		if(pc != null)			cnt++;</b>
+<b class="fc">&nbsp;		if(pe != null)			cnt++;</b>
+<b class="fc">&nbsp;		if(cp != null)			cnt++;</b>
+<b class="fc">&nbsp;		return cnt;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String[] getAttr() {
+<b class="fc">&nbsp;		int cnt = getCnt();</b>
+<b class="fc">&nbsp;		if(cnt == 0)	return null;</b>
+<b class="fc">&nbsp;		String attr[] = new String[cnt];</b>
+&nbsp;
+<b class="fc">&nbsp;		int k = 0;</b>
+<b class="fc">&nbsp;		if(student_id != null)	attr[k++] = &quot;student_id&quot;;</b>
+<b class="fc">&nbsp;		if(current != null)	attr[k++] = &quot;current&quot;;</b>
+<b class="fc">&nbsp;		if(total != null)	attr[k++] = &quot;total&quot;;</b>
+<b class="fc">&nbsp;		if(pc != null)	attr[k++] = &quot;pc&quot;;</b>
+<b class="fc">&nbsp;		if(pe != null)	attr[k++] = &quot;pe&quot;;</b>
+<b class="fc">&nbsp;		if(cp != null)	attr[k++] = &quot;cp&quot;;</b>
+<b class="fc">&nbsp;		if(prev_credits != null &amp;&amp; prev_credits.length != 0)	attr[k++] = &quot;student_id&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;		return attr;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String[] getVals() {
+<b class="fc">&nbsp;		int cnt = getCnt();</b>
+<b class="fc">&nbsp;		if(cnt == 0)	return null;</b>
+<b class="fc">&nbsp;		String vals[] = new String[cnt];</b>
+&nbsp;
+<b class="fc">&nbsp;		int k = 0;</b>
+<b class="fc">&nbsp;		if(student_id != null)	vals[k++] = String.format(&quot;&#39;%s&#39;&quot;, student_id);</b>
+<b class="fc">&nbsp;		if(current != null)	vals[k++] = String.format(&quot;&#39;%s&#39;&quot;, current);</b>
+<b class="fc">&nbsp;		if(total != null)	vals[k++] = String.format(&quot;&#39;%s&#39;&quot;, total);</b>
+<b class="fc">&nbsp;		if(pc != null)	vals[k++] = String.format(&quot;&#39;%s&#39;&quot;, pc);</b>
+<b class="fc">&nbsp;		if(pe != null)	vals[k++] = String.format(&quot;&#39;%s&#39;&quot;, pe);</b>
+<b class="fc">&nbsp;		if(cp != null)	vals[k++] = String.format(&quot;&#39;%s&#39;&quot;, cp);</b>
+<b class="fc">&nbsp;		if(prev_credits != null &amp;&amp; prev_credits.length != 0){</b>
+<b class="nc">&nbsp;			String arr = prev_credits[0] + &quot;&quot;;</b>
+<b class="nc">&nbsp;			for(int i = 1; i &lt; prev_credits.length; i++){</b>
+<b class="nc">&nbsp;				arr += &quot;, &quot; + prev_credits[i];</b>
+&nbsp;			}
+<b class="nc">&nbsp;			vals[k++] = String.format(&quot;ARRAY[%s]&quot;, arr);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		return vals;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String[] primaryVals() {
+<b class="fc">&nbsp;		if(student_id == null)	return null;</b>
+&nbsp;
+<b class="fc">&nbsp;		String[] pattr = new String[1];</b>
+<b class="fc">&nbsp;		pattr[0] = String.format(&quot;student_id=&#39;%s&#39;&quot;, student_id);</b>
+&nbsp;
+<b class="fc">&nbsp;		return pattr;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Credits parse(ResultSet res) throws Exception {
+<b class="fc">&nbsp;		Credits cr = new Credits();</b>
+&nbsp;
+<b class="fc">&nbsp;		cr.student_id = res.getString(&quot;student_id&quot;);</b>
+<b class="fc">&nbsp;		cr.prev_credits = (Integer[])(res.getArray(&quot;prev_credits&quot;).getArray());</b>
+<b class="fc">&nbsp;		cr.current = res.getInt(&quot;current&quot;);</b>
+<b class="fc">&nbsp;		cr.total = res.getInt(&quot;total&quot;);</b>
+<b class="fc">&nbsp;		cr.pc = res.getInt(&quot;pc&quot;);</b>
+<b class="fc">&nbsp;		cr.pe = res.getInt(&quot;pe&quot;);</b>
+<b class="fc">&nbsp;		cr.cp = res.getInt(&quot;cp&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;		return cr;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isValid() {
+<b class="nc">&nbsp;		if(student_id != null)	return true;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;	
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

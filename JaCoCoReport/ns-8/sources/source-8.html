@@ -1,0 +1,197 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Offering</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.dataObjects</a>
+</div>
+
+<h1>Coverage Summary for Class: Offering (aimscli.dataObjects)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Offering</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82.2%
+  </span>
+  <span class="absValue">
+    (37/45)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.dataObjects;
+&nbsp;
+&nbsp;import java.sql.ResultSet;
+&nbsp;import java.sql.SQLException;
+&nbsp;
+&nbsp;public class Offering implements DataObject{
+&nbsp;	public String course_id, instructor_id;
+&nbsp;	public Integer session_id;
+&nbsp;	public Float minCG;
+&nbsp;	public Boolean completed;
+&nbsp;
+<b class="fc">&nbsp;	public Offering(){}</b>
+&nbsp;
+&nbsp;	private int getCnt(){
+<b class="fc">&nbsp;		int cnt = 0;</b>
+&nbsp;
+<b class="fc">&nbsp;		if(course_id != null)	cnt++;</b>
+<b class="fc">&nbsp;		if(instructor_id != null)	cnt++;</b>
+<b class="fc">&nbsp;		if(session_id != null)	cnt++;</b>
+<b class="fc">&nbsp;		if(minCG != null)		cnt++;</b>
+<b class="fc">&nbsp;		if(completed != null)	cnt++;</b>
+&nbsp;
+<b class="fc">&nbsp;		return cnt;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String[] getAttr() {
+<b class="fc">&nbsp;		int cnt = getCnt();</b>
+<b class="fc">&nbsp;		if(cnt == 0)	return null;</b>
+<b class="fc">&nbsp;		String[] vals = new String[cnt];</b>
+&nbsp;
+<b class="fc">&nbsp;		int k = 0;</b>
+<b class="fc">&nbsp;		if(course_id != null)		vals[k++] = &quot;course_id&quot;;</b>
+<b class="fc">&nbsp;		if(session_id != null)			vals[k++] = &quot;session_id&quot;;</b>
+<b class="fc">&nbsp;		if(instructor_id != null)	vals[k++] = &quot;instructor_id&quot;;</b>
+<b class="fc">&nbsp;		if(minCG != null)			vals[k++] = &quot;minCG&quot;;</b>
+<b class="fc">&nbsp;		if(completed != null)		vals[k++] = &quot;completed&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;		return vals;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Offering parse(ResultSet res) throws Exception {
+&nbsp;		try{
+<b class="fc">&nbsp;			Offering o = new Offering();</b>
+&nbsp;
+<b class="fc">&nbsp;			o.course_id = res.getString(&quot;course_id&quot;);</b>
+<b class="fc">&nbsp;			o.instructor_id = res.getString(&quot;instructor_id&quot;);</b>
+<b class="fc">&nbsp;			o.session_id = res.getInt(&quot;session_id&quot;);</b>
+<b class="fc">&nbsp;			o.minCG = res.getFloat(&quot;minCG&quot;);</b>
+<b class="fc">&nbsp;			o.completed = res.getBoolean(&quot;completed&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;			return o;</b>
+<b class="nc">&nbsp;		}catch (SQLException e){</b>
+<b class="nc">&nbsp;			throw new Exception(&quot;Invalid type&quot;);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isValid() {
+<b class="fc">&nbsp;		if(course_id == null || session_id == null || instructor_id == null)	return false;</b>
+<b class="fc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String[] primaryVals() {
+<b class="nc">&nbsp;		if(course_id == null || session_id == null</b>
+&nbsp;		// || instructor_id != null
+<b class="nc">&nbsp;		)	return null;</b>
+&nbsp;
+<b class="nc">&nbsp;		String[] pattr = new String[2];</b>
+<b class="nc">&nbsp;		pattr[0] = String.format(&quot;course_id=&#39;%s&#39;&quot;, course_id);</b>
+<b class="nc">&nbsp;		pattr[1] = String.format(&quot;session_id=%d&quot;, session_id);</b>
+&nbsp;		// pattr[2] = String.format(&quot;instructor_id=&#39;%s&#39;&quot;, instructor_id);
+&nbsp;
+<b class="nc">&nbsp;		return pattr;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String[] getVals() {
+<b class="fc">&nbsp;		int cnt = getCnt();</b>
+<b class="fc">&nbsp;		if(cnt == 0)	return null;</b>
+<b class="fc">&nbsp;		String[] attr = new String[cnt];</b>
+&nbsp;
+<b class="fc">&nbsp;		int k = 0;</b>
+<b class="fc">&nbsp;		if(course_id != null)	attr[k++] = String.format(&quot;&#39;%s&#39;&quot;, course_id);</b>
+<b class="fc">&nbsp;		if(session_id != null)	attr[k++] = String.format(&quot;%d&quot;, session_id);</b>
+<b class="fc">&nbsp;		if(instructor_id != null)	attr[k++] = String.format(&quot;&#39;%s&#39;&quot;,instructor_id);</b>
+<b class="fc">&nbsp;		if(minCG != null)		attr[k++] = String.format(&quot;%f&quot;, minCG);</b>
+<b class="fc">&nbsp;		if(completed != null)	attr[k++] = ((completed)?&quot;true&quot;:&quot;false&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;		return attr;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > newAdmin</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.commands.New</a>
+</div>
+
+<h1>Coverage Summary for Class: newAdmin (aimscli.commands.New)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">newAdmin</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.commands.New;
+&nbsp;
+&nbsp;import aimscli.commands.Base.SubCmd;
+&nbsp;import aimscli.commands.Login;
+&nbsp;import aimscli.dataObjects.Auth;
+&nbsp;import aimscli.pgManager.AuthTable;
+&nbsp;import aimscli.pgManager.pgManager;
+&nbsp;import aimscli.viewManager.ansi;
+&nbsp;import picocli.CommandLine.Command;
+&nbsp;import picocli.CommandLine.Option;
+&nbsp;
+&nbsp;@Command(
+&nbsp;	name = &quot;admin&quot;,
+&nbsp;	description = &quot;Add a new admin into the database&quot;,
+&nbsp;	mixinStandardHelpOptions = true
+&nbsp;)
+<b class="nc">&nbsp;public class newAdmin extends SubCmd{</b>
+&nbsp;	@Option(names={&quot;--uid&quot;, &quot;--user&quot;}, arity=&quot;1&quot;)	String user_id;
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Integer call() throws Exception {
+<b class="nc">&nbsp;		Auth a = new Auth();</b>
+&nbsp;
+<b class="nc">&nbsp;		if(user_id == null)	user_id = fetchLine(&quot;User ID: &quot;, &quot;Invalid Input&quot;, this::validUid);</b>
+&nbsp;
+&nbsp;		try{
+<b class="nc">&nbsp;			AuthTable at = new AuthTable();</b>
+<b class="nc">&nbsp;			at.insert(user, a);</b>
+<b class="nc">&nbsp;			pgManager.commit();</b>
+<b class="nc">&nbsp;		}catch(Exception e){</b>
+<b class="nc">&nbsp;			Login.err.println(ansi.Err(e.getMessage()));</b>
+<b class="nc">&nbsp;			return 1;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;	
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

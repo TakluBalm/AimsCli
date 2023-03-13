@@ -1,0 +1,174 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > addCurriculum</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.commands.Curriculum</a>
+</div>
+
+<h1>Coverage Summary for Class: addCurriculum (aimscli.commands.Curriculum)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">addCurriculum</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    64%
+  </span>
+  <span class="absValue">
+    (16/25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.commands.Curriculum;
+&nbsp;
+&nbsp;import aimscli.commands.Base.SubCmd;
+&nbsp;import aimscli.commands.Login;
+&nbsp;import aimscli.dataObjects.Curriculum;
+&nbsp;import aimscli.pgManager.CurriculumTable;
+&nbsp;import aimscli.pgManager.pgManager;
+&nbsp;import aimscli.viewManager.ansi;
+&nbsp;import picocli.CommandLine;
+&nbsp;import picocli.CommandLine.Option;
+&nbsp;@CommandLine.Command(
+&nbsp;		name = &quot;add&quot;,
+&nbsp;		mixinStandardHelpOptions = true,
+&nbsp;		description = &quot;Add a new curriculum&quot;
+&nbsp;)
+<b class="fc">&nbsp;public class addCurriculum extends SubCmd{</b>
+&nbsp;	
+&nbsp;	@Option(names={&quot;-b&quot;, &quot;--batch&quot;}, description = &quot;Batch which will follow the curriculum&quot;)
+&nbsp;		String batch;
+&nbsp;	@Option(names={&quot;-p&quot;, &quot;--programme&quot;}, description = &quot;Programme which will follow the curriculum&quot;)
+&nbsp;		String programme;
+&nbsp;	@Option(names={&quot;--pc&quot;}, description = &quot;Programme Core credit requirement&quot;)
+&nbsp;		Integer pc;
+&nbsp;	@Option(names={&quot;--pe&quot;}, description = &quot;Programme Elective credit requirement&quot;)
+&nbsp;		Integer pe;
+&nbsp;	@Option(names={&quot;--cp&quot;}, description = &quot;Capstone Project credit requirement&quot;)
+&nbsp;		Integer cp;
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Integer call() throws Exception {
+<b class="fc">&nbsp;		Curriculum c = new Curriculum();</b>
+&nbsp;
+<b class="fc">&nbsp;		if(batch == null || !validBatch(batch)){</b>
+<b class="nc">&nbsp;			batch = fetchLine(&quot;Batch: &quot;, &quot;Invalid Batch Year&quot;, this::validBatch);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		c.batch = batch;</b>
+&nbsp;
+<b class="fc">&nbsp;		if(programme == null || !validDept(programme)){</b>
+<b class="nc">&nbsp;			programme = fetchLine(&quot;programme&quot;, &quot;Invalid Programme name&quot;, this::validDept);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		c.programme = programme;</b>
+&nbsp;
+<b class="fc">&nbsp;		if(pc == null){</b>
+<b class="nc">&nbsp;			pc = Integer.parseInt(fetchLine(&quot;Programme Core (min credits): &quot;, &quot;Invalid number&quot;, this::validNum));</b>
+&nbsp;		}
+<b class="fc">&nbsp;		c.pc = pc;</b>
+&nbsp;
+<b class="fc">&nbsp;		if(pe == null){</b>
+<b class="nc">&nbsp;			pe = Integer.parseInt(fetchLine(&quot;Programme Elective (min credits): &quot;, &quot;Invalid number&quot;, this::validNum));</b>
+&nbsp;		}
+<b class="fc">&nbsp;		c.pe = pe;</b>
+&nbsp;
+<b class="fc">&nbsp;		if(cp == null){</b>
+<b class="nc">&nbsp;			cp = Integer.parseInt(fetchLine(&quot;Capstone (min credits): &quot;, &quot;Invalid number&quot;, this::validNum));</b>
+&nbsp;		}
+<b class="fc">&nbsp;		c.cp = cp;</b>
+&nbsp;
+&nbsp;		try{
+<b class="fc">&nbsp;			CurriculumTable ct = new CurriculumTable();</b>
+<b class="fc">&nbsp;			ct.insert(user, c);</b>
+<b class="fc">&nbsp;			pgManager.commit();</b>
+&nbsp;
+<b class="fc">&nbsp;			return 0;</b>
+<b class="nc">&nbsp;		}catch(Exception e){</b>
+<b class="nc">&nbsp;			pgManager.rollback();</b>
+<b class="nc">&nbsp;			Login.err.println(ansi.Err(e.getMessage()));</b>
+<b class="nc">&nbsp;			return 1;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;	
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

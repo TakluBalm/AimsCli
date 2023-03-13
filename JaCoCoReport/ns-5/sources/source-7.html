@@ -1,0 +1,186 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > fetchOfferings</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.commands.Fetch</a>
+</div>
+
+<h1>Coverage Summary for Class: fetchOfferings (aimscli.commands.Fetch)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">fetchOfferings</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    53.1%
+  </span>
+  <span class="absValue">
+    (17/32)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.commands.Fetch;
+&nbsp;
+&nbsp;import aimscli.commands.Base.SubCmd;
+&nbsp;import aimscli.commands.Login;
+&nbsp;import aimscli.dataObjects.Offering;
+&nbsp;import aimscli.pgManager.OfferingTable;
+&nbsp;import aimscli.pgManager.pgManager;
+&nbsp;import aimscli.viewManager.ansi;
+&nbsp;import picocli.CommandLine.Command;
+&nbsp;import picocli.CommandLine.Option;
+&nbsp;
+&nbsp;import java.sql.ResultSet;
+&nbsp;
+&nbsp;@Command(
+&nbsp;	name = &quot;offerings&quot;,
+&nbsp;	description = &quot;Fetch the Offered courses for the semester&quot;,
+&nbsp;	mixinStandardHelpOptions = true
+&nbsp;)
+&nbsp;public class fetchOfferings extends SubCmd{
+&nbsp;
+<b class="fc">&nbsp;	public fetchOfferings(){}</b>
+&nbsp;
+&nbsp;	@Option(names={&quot;--instructor&quot;}, description = &quot;Fetch Offered courses taught by instructor&quot;)
+&nbsp;		String instructor_id;
+&nbsp;	@Option(names={&quot;--course&quot;}, description = &quot;Fetch Course with this ID&quot;)
+&nbsp;		String course_id;
+&nbsp;	@Option(names={&quot;--session&quot;}, description = &quot;Session to fetch from (defualt: current session)&quot;, arity = &quot;2&quot;)
+&nbsp;		String[] session;
+&nbsp;	@Option(names={&quot;-a&quot;}, description = &quot;Search in all the sessions (Superseded by --session)&quot;)
+&nbsp;		boolean all;
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Integer call() throws Exception{
+&nbsp;		try{
+<b class="fc">&nbsp;			Offering of = new Offering();</b>
+<b class="fc">&nbsp;			if(instructor_id != null){</b>
+<b class="nc">&nbsp;				if(validUid(instructor_id))</b>
+<b class="nc">&nbsp;					of.instructor_id = instructor_id;</b>
+&nbsp;				else
+<b class="nc">&nbsp;					Login.err.println(ansi.Err(&quot;Invalid instructor ID. Proceding without it&quot;));</b>
+&nbsp;			}
+<b class="fc">&nbsp;			if(course_id != null){</b>
+<b class="nc">&nbsp;				if(validUid(course_id))</b>
+<b class="nc">&nbsp;					of.course_id = course_id;</b>
+&nbsp;				else
+<b class="nc">&nbsp;					Login.err.println(ansi.Err(&quot;Invalid course ID. Proceding without it&quot;));</b>
+&nbsp;			}
+<b class="fc">&nbsp;			if(session != null){</b>
+<b class="nc">&nbsp;				if(validBatch(session[0]) &amp;&amp; validSem(session[1])){</b>
+<b class="nc">&nbsp;					Integer temp = pgManager.getSessionID(session[0], session[1]);</b>
+<b class="nc">&nbsp;					if(temp == null){</b>
+<b class="nc">&nbsp;						Login.err.println(ansi.Err(&quot;Invalid Year/Sem pair. Proceding without it&quot;));</b>
+&nbsp;					}else{
+<b class="nc">&nbsp;						of.session_id = temp;</b>
+&nbsp;					}
+<b class="nc">&nbsp;				}</b>
+<b class="fc">&nbsp;			}else if(!all){</b>
+<b class="fc">&nbsp;				of.session_id = pgManager.currentSession();</b>
+&nbsp;			}
+&nbsp;
+<b class="fc">&nbsp;			OfferingTable ot = new OfferingTable();</b>
+&nbsp;			
+<b class="fc">&nbsp;			ResultSet res = ot.query(user, of);</b>
+<b class="fc">&nbsp;			int k = 1;</b>
+<b class="fc">&nbsp;			Login.out.println(&quot;0. (course_id, instructor_id, minCG, completed)&quot;);</b>
+<b class="fc">&nbsp;			while(res.next()){</b>
+<b class="fc">&nbsp;				of = of.parse(res);</b>
+<b class="fc">&nbsp;				Login.out.printf(</b>
+&nbsp;					&quot;%d. (%s, %s, %f, %s)&quot;,
+<b class="fc">&nbsp;					k++, of.course_id, of.instructor_id,</b>
+&nbsp;					of.minCG, of.completed
+&nbsp;				);
+&nbsp;			}
+<b class="fc">&nbsp;			res.close();</b>
+&nbsp;
+<b class="fc">&nbsp;			return 0;</b>
+<b class="nc">&nbsp;		}catch(Exception e){</b>
+<b class="nc">&nbsp;			Login.err.println(ansi.Err(e.getMessage()));</b>
+<b class="nc">&nbsp;			return 1;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;	
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

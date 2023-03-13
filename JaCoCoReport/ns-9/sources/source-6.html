@@ -1,0 +1,188 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > EnrollmentTable</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.pgManager</a>
+</div>
+
+<h1>Coverage Summary for Class: EnrollmentTable (aimscli.pgManager)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EnrollmentTable</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72.7%
+  </span>
+  <span class="absValue">
+    (8/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    61.9%
+  </span>
+  <span class="absValue">
+    (26/42)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.pgManager;
+&nbsp;
+&nbsp;import aimscli.dataObjects.Enrollment;
+&nbsp;import aimscli.pgManager.pgManager.Privilege;
+&nbsp;import aimscli.pgManager.pgManager.User;
+&nbsp;
+&nbsp;import java.sql.ResultSet;
+&nbsp;
+&nbsp;public class EnrollmentTable extends Table{
+&nbsp;
+&nbsp;	public EnrollmentTable(){
+<b class="fc">&nbsp;		super(&quot;enrollment&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean insertPrivilege(User u) {
+<b class="fc">&nbsp;		if(u.privilege == Privilege.FAC)	return false;</b>
+<b class="fc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean updatePrivilege(User u) {
+<b class="fc">&nbsp;		if(u.privilege == Privilege.STU)	return false;</b>
+<b class="fc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean queryPrivilege(User u) {
+<b class="fc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean deletePrivilege(User u) {
+<b class="nc">&nbsp;		return insertPrivilege(u);</b>
+&nbsp;	}
+&nbsp;	
+&nbsp;	public void insert(User u, Enrollment e) throws Exception{
+<b class="fc">&nbsp;		if(u.privilege == Privilege.STU){</b>
+<b class="fc">&nbsp;			e.student_id = u.user_id;</b>
+&nbsp;		}
+<b class="fc">&nbsp;		super.insert(u, e);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void update(User u, Enrollment old, Enrollment updates) throws Exception{
+<b class="fc">&nbsp;		if(u.privilege == Privilege.FAC){</b>
+<b class="fc">&nbsp;			updates.student_id = updates.course_id = null;</b>
+<b class="fc">&nbsp;			updates.session_id = null;</b>
+<b class="nc">&nbsp;		}</b>
+<b class="fc">&nbsp;		if(u.privilege == Privilege.STU){</b>
+<b class="nc">&nbsp;			old.student_id = u.user_id;</b>
+<b class="nc">&nbsp;			updates.grade = null;</b>
+<b class="nc">&nbsp;		}</b>
+<b class="fc">&nbsp;		super.update(u, old, updates);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;	
+&nbsp;	public ResultSet query(User u, Enrollment reference) throws Exception{
+<b class="fc">&nbsp;		if(u.privilege == Privilege.STU){</b>
+<b class="fc">&nbsp;			reference.student_id = u.user_id;</b>
+<b class="fc">&nbsp;		}</b>
+<b class="fc">&nbsp;		return super.query(u, reference);</b>
+<b class="fc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public Integer queryCount(User u, Enrollment reference) throws Exception{
+<b class="fc">&nbsp;		String prev = select;</b>
+<b class="fc">&nbsp;		select = &quot;count(*)&quot;;</b>
+<b class="fc">&nbsp;		ResultSet r =  query(u, reference);</b>
+<b class="fc">&nbsp;		if(!r.next()){</b>
+<b class="nc">&nbsp;			throw new Exception(&quot;Error occured&quot;);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="fc">&nbsp;		int cnt = r.getInt(1);</b>
+<b class="fc">&nbsp;		select = prev;</b>
+<b class="fc">&nbsp;		return cnt;</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public boolean delete(User u, Enrollment ref) throws Exception{
+<b class="nc">&nbsp;		return super.delete(u, ref);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public ResultSet dynamicQuery(User u, String where) throws Exception{
+<b class="nc">&nbsp;		if(u.privilege == Privilege.STU){</b>
+<b class="nc">&nbsp;			where = String.format(&quot;(%s) and student_id=&#39;%s&#39;&quot;, where, u.user_id);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		return super.dynamicQuery(u, where);</b>
+<b class="nc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

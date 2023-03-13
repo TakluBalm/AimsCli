@@ -1,0 +1,199 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > newProposal</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.commands.New</a>
+</div>
+
+<h1>Coverage Summary for Class: newProposal (aimscli.commands.New)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">newProposal</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73%
+  </span>
+  <span class="absValue">
+    (27/37)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.commands.New;
+&nbsp;
+&nbsp;import aimscli.commands.Base.SubCmd;
+&nbsp;import aimscli.commands.Login;
+&nbsp;import aimscli.dataObjects.Course;
+&nbsp;import aimscli.pgManager.ProposalTable;
+&nbsp;import aimscli.pgManager.pgManager;
+&nbsp;import aimscli.viewManager.ansi;
+&nbsp;import picocli.CommandLine.Command;
+&nbsp;import picocli.CommandLine.Option;
+&nbsp;
+&nbsp;@Command(
+&nbsp;	name = &quot;proposal&quot;,
+&nbsp;	description = &quot;Propose a new Course to be added to catalog&quot;,
+&nbsp;	mixinStandardHelpOptions = true
+&nbsp;)
+<b class="fc">&nbsp;public class newProposal extends SubCmd{</b>
+&nbsp;
+&nbsp;	@Option(names={&quot;-i&quot;, &quot;--id&quot;}, description = &quot;Course ID&quot;)
+&nbsp;		String course_id;
+&nbsp;	@Option(names={&quot;-c&quot;, &quot;--creds&quot;}, description = &quot;Course credits&quot;)
+&nbsp;		Integer credits;
+&nbsp;	@Option(names={&quot;-n&quot;, &quot;--name&quot;}, description = &quot;Course name&quot;)
+&nbsp;		String arg_name;
+&nbsp;	@Option(names={&quot;-p&quot;, &quot;--prereq&quot;}, description = &quot;Prerequisites for the Course&quot;)
+&nbsp;		String arg_prereq;
+&nbsp;	@Option(names={&quot;--ltp&quot;}, description = &quot;LTP structure of Course&quot;)
+&nbsp;		String arg_ltp;
+&nbsp;	@Option(names={&quot;-d&quot;, &quot;--dept&quot;}, description = &quot;Department that is proposing the Course (Ignored if Faculty)&quot;)
+&nbsp;		String dept;
+&nbsp;	@Option(names={&quot;-t&quot;, &quot;--type&quot;}, description = &quot;Course Type(PC/PE/CP)&quot;)
+&nbsp;		String ctype;
+&nbsp;	@Option(names={&quot;--desc&quot;}, description = &quot;Directs the Command to prompt for Course Description&quot;)
+&nbsp;		boolean desc;
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Integer call() throws Exception {
+<b class="fc">&nbsp;		Course p = new Course();</b>
+&nbsp;
+&nbsp;		
+<b class="fc">&nbsp;		if(course_id == null || !validUid(course_id)){</b>
+<b class="nc">&nbsp;			course_id = fetchLine(&quot;Course ID: &quot;, &quot;Invalid Input&quot;, this::validUid);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		p.course_id = course_id;</b>
+&nbsp;
+<b class="fc">&nbsp;		if(arg_name == null || !validDept(arg_name)){</b>
+<b class="nc">&nbsp;			arg_name = fetchLine(&quot;Name: &quot;, &quot;Invalid Name&quot;, this::validDept);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		p.name = arg_name;</b>
+&nbsp;
+<b class="fc">&nbsp;		if(credits == null){</b>
+<b class="nc">&nbsp;			credits = Integer.parseInt(fetchLine(&quot;Credits: &quot;, &quot;Invalid Input&quot;, this::validNum));</b>
+&nbsp;		}
+<b class="fc">&nbsp;		p.credits = credits;</b>
+&nbsp;
+<b class="fc">&nbsp;		if(desc){</b>
+<b class="nc">&nbsp;			p.description = fetchMultiLine(&quot;Description (Empty line marks the end): &quot;);</b>
+&nbsp;		}
+&nbsp;		
+<b class="fc">&nbsp;		if(arg_ltp == null || !validLTP(arg_ltp)){</b>
+<b class="nc">&nbsp;			arg_ltp = fetchLine(&quot;LTP: &quot;, &quot;Invalid Input&quot;, this::validLTP);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		p.ltp = arg_ltp;</b>
+&nbsp;
+<b class="fc">&nbsp;		if(arg_prereq != null &amp;&amp; !validArray(arg_prereq)){</b>
+<b class="nc">&nbsp;			arg_prereq = fetchLine(&quot;Prerequistes(comma-seperated): &quot;, &quot;Invalid format&quot;, this::validArray);</b>
+<b class="nc">&nbsp;			p.prereq = extractPrereq(arg_prereq.split(&quot;,&quot;));</b>
+&nbsp;		}else{
+<b class="fc">&nbsp;			p.prereq = ((arg_prereq == null)?null:extractPrereq(arg_prereq.split(&quot;,&quot;)));</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if(user.dept != null){</b>
+<b class="fc">&nbsp;			dept = user.dept;</b>
+<b class="nc">&nbsp;		}else if(dept == null || !validDept(dept)){</b>
+<b class="nc">&nbsp;			dept = fetchLine(&quot;Department: &quot;, &quot;Invalid Department name&quot;, this::validDept);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		p.dept = dept;</b>
+&nbsp;
+<b class="fc">&nbsp;		if(ctype == null || !validCType(ctype)){</b>
+<b class="nc">&nbsp;			ctype = fetchLine(&quot;Course Type: &quot;, &quot;Invalid Type&quot;, this::validCType);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		p.course_type = ctype;</b>
+&nbsp;
+&nbsp;		try{
+<b class="fc">&nbsp;			ProposalTable pt = new ProposalTable();</b>
+<b class="fc">&nbsp;			pt.insert(user, p);</b>
+<b class="fc">&nbsp;			pgManager.commit();</b>
+<b class="fc">&nbsp;		}catch(Exception e){</b>
+<b class="fc">&nbsp;			pgManager.rollback();</b>
+<b class="fc">&nbsp;			Login.err.println(ansi.Err(e.getMessage()));</b>
+<b class="fc">&nbsp;			return 1;</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+<b class="fc">&nbsp;		return 0;</b>
+&nbsp;	}	
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>

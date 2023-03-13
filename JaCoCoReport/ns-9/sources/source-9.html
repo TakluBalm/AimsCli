@@ -1,0 +1,164 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ProposalTable</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">aimscli.pgManager</a>
+</div>
+
+<h1>Coverage Summary for Class: ProposalTable (aimscli.pgManager)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProposalTable</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88.9%
+  </span>
+  <span class="absValue">
+    (8/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88.2%
+  </span>
+  <span class="absValue">
+    (15/17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package aimscli.pgManager;
+&nbsp;
+&nbsp;import aimscli.dataObjects.Course;
+&nbsp;import aimscli.pgManager.pgManager.Privilege;
+&nbsp;import aimscli.pgManager.pgManager.User;
+&nbsp;
+&nbsp;import java.sql.ResultSet;
+&nbsp;
+&nbsp;public class ProposalTable extends Table{
+&nbsp;
+&nbsp;	public ProposalTable(){
+<b class="fc">&nbsp;		super(&quot;proposal&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean insertPrivilege(User u) {
+<b class="fc">&nbsp;		if(u.privilege == Privilege.STU)	return false;</b>
+<b class="fc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean updatePrivilege(User u) {
+<b class="fc">&nbsp;		return insertPrivilege(u);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean queryPrivilege(User u) {
+<b class="fc">&nbsp;		return insertPrivilege(u);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean deletePrivilege(User u) {
+<b class="nc">&nbsp;		return insertPrivilege(u);</b>
+&nbsp;	}
+&nbsp;	
+&nbsp;	public void insert(User u, Course p) throws Exception{
+<b class="fc">&nbsp;		super.insert(u, p);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void update(User u, Course old, Course updates) throws Exception{
+<b class="fc">&nbsp;		if(u.privilege == Privilege.FAC){</b>
+<b class="fc">&nbsp;			old.dept = u.dept;</b>
+<b class="fc">&nbsp;			updates.dept = u.dept;</b>
+&nbsp;		}
+<b class="fc">&nbsp;		super.update(u, old, updates);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public ResultSet query(User u, Course reference) throws Exception{
+<b class="fc">&nbsp;		if(u.privilege == Privilege.FAC){</b>
+<b class="fc">&nbsp;			reference.dept = u.dept;</b>
+&nbsp;		}
+<b class="fc">&nbsp;		return super.query(u, reference);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void delete(User u, Course p) throws Exception{
+<b class="fc">&nbsp;		if(u.privilege == Privilege.FAC){</b>
+<b class="nc">&nbsp;			if(!u.dept.equals(p.dept))	throw new Exception(&quot;Permission Denied&quot;);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		super.delete(u, p);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-09 16:46</div>
+</div>
+</body>
+</html>
